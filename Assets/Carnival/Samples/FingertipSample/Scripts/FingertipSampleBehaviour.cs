@@ -9,7 +9,11 @@ public class FingertipSampleBehaviour : MonoBehaviour
 	public GameObject stickPrefab;
 	// A stick object with collider to hit moles
 
+	private List<GameObject> sticks;
+
 	private Controller _carnivalController;
+
+	private GameObject debugHand;
 	// Controller to access frame data
 
 	// Use this for initialization
@@ -21,45 +25,66 @@ public class FingertipSampleBehaviour : MonoBehaviour
 		_carnivalController.Init();
 		_carnivalController.Start();
 
-		// instantiate sticks
-		// if there are no hands in scene, make sticks invisible
-		// instead of instantiating so many times...
+		sticks = new List<GameObject> ();
 
+		//debugHand = GameObject.Find ("debug hand");
+		//debugHand.transform.SetParent (Camera.main.transform);
 
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		foreach(GameObject stick in GameObject.FindGameObjectsWithTag("stick"))
+		foreach(GameObject stick in sticks)
 		{
-			Destroy(stick);
+			stick.SetActive (false);
+
 		}
 
 		// Get the current frame
 		Frame frame = _carnivalController.Frame();
 
-		// Fingertips are always linked to a certain Hand.
-		foreach(Hand hand in frame.Hands)
-		{
-			// instead of foreach
-			// check if hand.Fingertips.count > 0
-			//if (hand.Fingertips.Count > 0) {
+		//if (frame.Hands.Count > 0) {
+		//	debugHand.transform.localPosition = frame.Hands [0].CenterOfGravity;
+		//}
 
-			//}
-			// ..
-			foreach(Fingertip tip in hand.Fingertips)
-			{
-				GameObject stick = Instantiate(stickPrefab) as GameObject;
+		int sticksNeeded = 0;
+		foreach (Hand hand in frame.Hands)
+		{
+			
+			if (hand.Fingertips.Count > 0) {
+				sticksNeeded++;
+			}
+
+
+			Debug.Log (sticksNeeded);
+
+		}
+
+		for (int i = sticks.Count; i < sticksNeeded; i++) 
+		{
+			GameObject stick = Instantiate(stickPrefab) as GameObject;
+			sticks.Add (stick);
+		}
+
+		int currentStick = 0;
+		foreach (Hand hand in frame.Hands) {
+			foreach (Fingertip tip in hand.Fingertips) {
+				
+				GameObject stick = sticks [currentStick];
+				stick.SetActive (true);
 
 				stick.transform.parent = Camera.main.transform;
-				stick.transform.parent.rotation = Camera.main.transform.rotation;
-
-			
+				//stick.transform.SetParent (Camera.main.transform, false);
+						
 				// 3D loaction of fingertip is relative position to sensor. Here we keep it simple since sensor is mounted
 				// quite close to your eyes which is main camera. 
 				// For better UX you should actually take the distance into account
+				//stick.transform.localPosition = hand.CenterOfGravity;
+				//stick.transform.LookAt (tip.Center3D);
+
 				stick.transform.localPosition = tip.Center3D;
+
 
 			}
 		}
@@ -67,6 +92,10 @@ public class FingertipSampleBehaviour : MonoBehaviour
 
 	void OnDestroy()
 	{
+
+		if (_carnivalController == null) {
+			return;
+		}
 		Debug.Log("FingertipSampleBehaviour: OnDestroy");
 		_carnivalController.Stop();
 	}

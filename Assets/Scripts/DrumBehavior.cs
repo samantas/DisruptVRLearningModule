@@ -7,6 +7,9 @@ public class DrumBehavior : MonoBehaviour
 	public AudioClip tom;
 	public AudioClip snare;
 
+	public static int tomCounter;
+	public static int snareCounter;
+
 	void Start()
 	{
 
@@ -23,11 +26,13 @@ public class DrumBehavior : MonoBehaviour
 		//// TOM
 		if (!audioSource.isPlaying && gameObject.tag == "tom") {
 			audioSource.PlayOneShot (tom);
+			tomCounter++;
 		} 
 
 		//// SNARE
 		if (!audioSource.isPlaying && gameObject.tag == "snare") {
 			audioSource.PlayOneShot (snare);
+			snareCounter++;
 
 		} 
 	}
