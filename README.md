@@ -9,6 +9,8 @@ VR Learning Module Hacked at TechCrunch Disrupt
 #Acknowledgements
 
 Thank you to:
-The PMD and Carnival team
-Hayden from ConVRge for networking help
-Our moms for mother's day <3
+- The PMD and Carnival team
+
+- Hayden from ConVRge for networking help
+
+- Our moms for mother's day <3
