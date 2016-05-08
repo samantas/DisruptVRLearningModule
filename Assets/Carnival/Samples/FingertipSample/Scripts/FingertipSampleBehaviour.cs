@@ -21,6 +21,11 @@ public class FingertipSampleBehaviour : MonoBehaviour
 		_carnivalController.Init();
 		_carnivalController.Start();
 
+		// instantiate sticks
+		// if there are no hands in scene, make sticks invisible
+		// instead of instantiating so many times...
+
+
 	}
 
 	// Update is called once per frame
@@ -37,15 +42,25 @@ public class FingertipSampleBehaviour : MonoBehaviour
 		// Fingertips are always linked to a certain Hand.
 		foreach(Hand hand in frame.Hands)
 		{
+			// instead of foreach
+			// check if hand.Fingertips.count > 0
+			//if (hand.Fingertips.Count > 0) {
+
+			//}
+			// ..
 			foreach(Fingertip tip in hand.Fingertips)
 			{
 				GameObject stick = Instantiate(stickPrefab) as GameObject;
-				stick.transform.parent = Camera.main.transform;
 
+				stick.transform.parent = Camera.main.transform;
+				stick.transform.parent.rotation = Camera.main.transform.rotation;
+
+			
 				// 3D loaction of fingertip is relative position to sensor. Here we keep it simple since sensor is mounted
-				// quite close to your eyes which is main camera. For better UX you should actually take the distance into
-				// account
+				// quite close to your eyes which is main camera. 
+				// For better UX you should actually take the distance into account
 				stick.transform.localPosition = tip.Center3D;
+
 			}
 		}
 	}

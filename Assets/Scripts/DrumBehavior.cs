@@ -9,24 +9,33 @@ public class DrumBehavior : MonoBehaviour
 
 	void Start()
 	{
-		
+
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-
+		
 	}
 
 	void OnTriggerEnter(Collider col)
 	{
-		if (gameObject.tag == "tom") {
-			audioSource.Play ();
-			audioSource.clip = tom;
+		//// TOM
+		if (!audioSource.isPlaying && gameObject.tag == "tom") {
+			audioSource.PlayOneShot (tom);
+		} 
 
-		} else if (col.tag == "snare") {
-			audioSource.Play ();
-			audioSource.clip = snare;
-		}
+		//// SNARE
+		if (!audioSource.isPlaying && gameObject.tag == "snare") {
+			audioSource.PlayOneShot (snare);
+
+		} 
 	}
+
+	IEnumerator waitAndPlay(float waitTime){
+		yield return new WaitForSeconds (waitTime);
+
+	}
+		
+
 }
