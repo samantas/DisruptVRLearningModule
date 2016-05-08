@@ -1,14 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+
 public class MoleBehaviour : MonoBehaviour
 {
-    private float _initY;
+	public float _initY;
+
+	public AudioClip impact;
+	AudioSource audio;
+
 
     void Start()
     {
         // Remember initial position
         _initY = transform.position.y;
+
+		audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -21,22 +29,30 @@ public class MoleBehaviour : MonoBehaviour
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
             gameObject.tag = "aboveGround";
+
+			//test this
+			//Debug.Log("going underground");
         }
 
-        // Underneath ground?
-        if (GetComponent<CapsuleCollider>().bounds.max.y < 0)
-        {
-            gameObject.tag = "underGround";
-        }
+//        // Underneath ground?
+//		if (GetComponent<BoxCollider>().bounds.max.y < 0)
+//        {
+//            gameObject.tag = "underGround";
+//        }
     }
 
     void OnTriggerEnter(Collider col)
     {
+		
         if (gameObject.tag == "aboveGround")
         {
+			audio.PlayOneShot(impact, 0.7F);
             // Mole falls down when it is hit by collider
             GetComponent<Rigidbody>().useGravity = true;
             gameObject.tag = "movingDown";
+
+			gameObject.tag = "underGround";
+
         }
     }
 }

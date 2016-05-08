@@ -6,8 +6,8 @@ using Carnival;
 
 public class FingertipSampleBehaviour : MonoBehaviour
 {
-	public GameObject stickPrefab;
-	// A stick object with collider to hit moles
+	public GameObject hammerPrefab;
+	// A hammer object with collider to hit moles
 
 	private Controller _carnivalController;
 	// Controller to access frame data
@@ -21,14 +21,17 @@ public class FingertipSampleBehaviour : MonoBehaviour
 		_carnivalController.Init();
 		_carnivalController.Start();
 
+		//Bring keys back up every second
+		// Repeat method every 1 seconds
+		InvokeRepeating("showRandomMoles", 1F, 1F);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		foreach(GameObject stick in GameObject.FindGameObjectsWithTag("stick"))
+		foreach(GameObject hammer in GameObject.FindGameObjectsWithTag("hammer"))
 		{
-			Destroy(stick);
+			Destroy(hammer);
 		}
 
 		// Get the current frame
@@ -39,14 +42,44 @@ public class FingertipSampleBehaviour : MonoBehaviour
 		{
 			foreach(Fingertip tip in hand.Fingertips)
 			{
-				GameObject stick = Instantiate(stickPrefab) as GameObject;
-				stick.transform.parent = Camera.main.transform;
+				GameObject hammer = Instantiate(hammerPrefab) as GameObject;
+				hammer.transform.parent = Camera.main.transform;
 
 				// 3D loaction of fingertip is relative position to sensor. Here we keep it simple since sensor is mounted
 				// quite close to your eyes which is main camera. For better UX you should actually take the distance into
 				// account
-				stick.transform.localPosition = tip.Center3D;
+				hammer.transform.localPosition = tip.Center3D;
 			}
+		}
+	}
+
+	// Randomly show moles above the ground
+	void showRandomMoles()
+	{
+		GameObject[] moles = GameObject.FindGameObjectsWithTag("underGround");
+		System.Random rand = new System.Random();
+
+
+		foreach(GameObject mole in moles)
+		{
+//			// 50% chance to move moles beneath ground upwards
+			if(rand.NextDouble() >= 0.5)
+			{
+				mole.GetComponent<Rigidbody>().useGravity = false;
+				//Vector3 temp = new Vector3(0,1.0f,0);
+				//mole.transform.position += temp;
+
+
+				mole.GetComponent<Rigidbody>().velocity = Vector3.up;
+				gameObject.tag = "movingUp";
+			}
+//			//it's not called "hackathon" for nothing
+//			//....
+//			else{
+//				mole.GetComponent<Rigidbody>().useGravity = false;
+//				mole.GetComponent<Rigidbody>().velocity = Vector3.up;
+//				gameObject.tag = "movingUp";
+//			}
 		}
 	}
 
